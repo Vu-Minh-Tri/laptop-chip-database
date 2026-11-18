@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Search and compare laptop chips." />
+    <title>Laptop Chip Database</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header>
+        <p class="eyebrow">Open hardware data</p>
+        <h1>Laptop Chip Database</h1>
+        <p class="subtitle">Look up laptop processors and graphics chips.</p>
+      </header>
+
+      <section class="search-panel" aria-label="Chip search">
+        <label for="search">Search chips</label>
+        <input id="search" type="search" placeholder="Try AMD Ryzen 7 7840U" autocomplete="off" />
+        <div class="filters">
+          <label for="type-filter">Type</label>
+          <select id="type-filter">
+            <option value="all">All chips</option>
+            <option value="CPU">CPU</option>
+            <option value="GPU">GPU</option>
+          </select>
+        </div>
+      </section>
+
+      <p id="result-count" class="result-count" aria-live="polite"></p>
+      <section id="chip-list" class="chip-grid" aria-label="Chips"></section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
