@@ -108,6 +108,11 @@ input, select {
 .info-card.tone-good { border-left-color: #65d6ad; }
 .info-card.tone-bad { border-left-color: #f28e8e; }
 .info-card.tone-tip { border-left-color: #f2c464; }
+.info-card.tone-amd { border-left-color: #f28e8e; }
+.info-card.tone-intel { border-left-color: #79aef2; }
+.info-card.tone-nvidia { border-left-color: #65d6ad; }
+
+.panel-subtitle { margin: 1.75rem 0 .75rem; font-size: 1.15rem; color: var(--text); }
 
 @media (max-width: 560px) {
   .app-shell { padding-top: 2rem; }

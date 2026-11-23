@@ -32,6 +32,7 @@
         <button id="tab-chips" class="tab active" role="tab" aria-selected="true" aria-controls="panel-chips" data-tab="chips">Chips</button>
         <button id="tab-suffixes" class="tab" role="tab" aria-selected="false" aria-controls="panel-suffixes" data-tab="suffixes">Chip Suffixes</button>
         <button id="tab-ram" class="tab" role="tab" aria-selected="false" aria-controls="panel-ram" data-tab="ram">RAM Channel Modes</button>
+        <button id="tab-fabs" class="tab" role="tab" aria-selected="false" aria-controls="panel-fabs" data-tab="fabs">Who Makes The Chips</button>
       </nav>
 
       <section id="panel-chips" class="tab-panel active" role="tabpanel" aria-labelledby="tab-chips">
@@ -49,6 +50,14 @@
         <h2 class="panel-title">RAM channel modes &amp; their effects</h2>
         <p class="panel-intro">Memory channels determine how much bandwidth your RAM — especially integrated graphics — can actually use.</p>
         <div id="ram-list" class="info-grid"></div>
+      </section>
+
+      <section id="panel-fabs" class="tab-panel" role="tabpanel" aria-labelledby="tab-fabs" hidden>
+        <h2 class="panel-title">Which company actually manufactures each chip</h2>
+        <p class="panel-intro">The brand on the box (Intel, AMD, Apple, NVIDIA) is often <strong>not</strong> the factory that etches the silicon. Companies that only design chips are called <em>fabless</em>; companies that own factories are <em>IDMs</em>; contract factories are <em>foundries</em>. Here's who fabbs what:</p>
+        <div id="fab-brand-list" class="info-grid"></div>
+        <h3 class="panel-subtitle">Foundry cheat sheet</h3>
+        <div id="fab-foundry-list" class="info-grid"></div>
       </section>
     </main>
     <script src="app.js"></script>

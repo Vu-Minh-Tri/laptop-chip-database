@@ -79,6 +79,29 @@ function infoCard(item, titleKey) {
 document.querySelector("#suffix-list").innerHTML = suffixes.map((s) => infoCard(s)).join("");
 document.querySelector("#ram-list").innerHTML = ramModes.map((m) => infoCard(m)).join("");
 
+// ---- Who actually manufactures (fabs) each chip brand ----
+const fabBrands = [
+  { code: "Apple", maker: "Designer only (fabless)", name: "Designed by Apple, fabbed by TSMC", detail: "Every M-series chip (M1 → M4 and beyond) is designed in California but manufactured by TSMC — on N5 for M1/M2, N3B/N3E for M3/M4, at fabs in Hsinchu and Kaohsiung, Taiwan. Apple books huge volumes of TSMC's most advanced nodes; packaging happens largely in Asia as well.", tone: "apple" },
+  { code: "AMD", maker: "Fabless since 2009", name: "Designed by AMD, fabbed mostly by TSMC", detail: "AMD spun off its factories into GlobalFoundries in 2009. Today all modern laptop chips — Ryzen 6000/7000/8000/9000 CPUs and Radeon iGPUs/dGPUs — are made by TSMC (7nm → 4nm, with Zen 5 parts on N4/N3). Some older I/O and RF companion chips still came from GlobalFoundries.", tone: "amd" },
+  { code: "Intel", maker: "IDM (owns its fabs)", name: "Designed AND manufactured by Intel", detail: "Intel is the last major x86 vendor that builds its own silicon: Core U/P/H laptop chips were fabbed on Intel 7 / Intel 4 in Oregon, Arizona, Ireland and Israel. Since Meteor Lake (Core Ultra), Intel also uses TSMC for some tiles (e.g. the GPU tile) and Samsung for others — a hybrid 'Intel Foundry + external foundry' model — while expanding new fabs in Arizona, Germany and Poland.", tone: "intel" },
+  { code: "NVIDIA", maker: "Fabless", name: "Designed by NVIDIA, fabbed by TSMC", detail: "NVIDIA owns no factories. GeForce RTX laptop GPUs (Ampere, Ada Lovelace, Blackwell) are manufactured by TSMC — typically on 8N/4N-class nodes. The 'Laptop GPU' die is often a binned/downclocked version of the desktop chip, built at the same TSMC fabs.", tone: "nvidia" },
+  { code: "Qualcomm", maker: "Fabless", name: "Snapdragon X: designed by Qualcomm, fabbed by TSMC", detail: "The Snapdragon X Elite/X Plus ARM laptop chips are made by TSMC on N4. Qualcomm (like Apple and AMD) relies entirely on TSMC for its cutting-edge mobile/laptop silicon.", tone: "gpu" },
+  { code: "MediaTek", maker: "Fabless", name: "Fabbed by TSMC (and occasionally others)", detail: "Behind fewer mainstream laptops today, but its Dimensity/companion silicon is TSMC-manufactured; MediaTek designs SoCs used in Chromebooks and budget Windows arm machines.", tone: "note" },
+  { code: "Samsung Exynos", maker: "IDM", name: "Designed and fabbed by Samsung", detail: "Samsung both designs and manufactures its own chips in its Korean fabs (Hwaseong/Pyeongtaek). It also runs a foundry business making chips for NVIDIA (older modems/GPUs historically) and others — with mixed results on the most advanced nodes versus TSMC.", tone: "note" }
+];
+
+const foundries = [
+  { mode: "TSMC (Taiwan)", effect: "The world's #1 contract factory — makes the vast majority of cutting-edge chips: Apple M-series, AMD Ryzen/Radeon, NVIDIA GeForce, Qualcomm Snapdragon. Leading nodes (N5/N4/N3) run in Hsinchu, Taichung and Kaohsiung, with new fabs in Arizona, Japan and Germany. If your premium laptop chip isn't Intel, it's almost certainly TSMC-made.", tone: "good" },
+  { mode: "Intel Foundry (USA/EU)", effect: "Intel's own factories, now also selling capacity to outside customers. Produces Intel's Core series plus selected partners' chips on Intel 3/Intel 18A nodes. Fabs in Oregon, Arizona, New Mexico; under construction in Ohio, Germany and Poland.", tone: "perf" },
+  { mode: "Samsung Foundry (Korea)", effect: "#2 contract maker. Fabbed some older NVIDIA and Qualcomm parts and Intel's low-power Atom/SoC tiles (Meteor Lake's base tile came from Samsung). Strong in memory (DRAM/NAND) — the RAM in your laptop likely comes from Samsung, SK hynix or Micron regardless of CPU maker.", tone: "mid" },
+  { mode: "GlobalFoundries", effect: "The company AMD sold its fabs to in 2009. No longer chases the smallest nodes; makes older/specialty chips — some AMD I/O dies, RF and power-management components found inside laptops.", tone: "eco" },
+  { mode: "SMIC / Hua Hong (China)", effect: "Chinese contract fabs working mainly on mature nodes (28nm+). Rarely seen in premium Western laptop CPUs, but increasingly relevant for budget components, controllers and domestic-market SoCs.", tone: "note" },
+  { mode: "Assembly & test (OSATs)", effect: "After wafer fabrication, chips are cut, packaged and tested by firms like ASE, Amkor and JCET — mostly in Taiwan, Malaysia, South Korea and China. 'Made where?' therefore has three answers: wafer fab, packaging site, and final assembly of the laptop itself.", tone: "tip" }
+];
+
+document.querySelector("#fab-brand-list").innerHTML = fabBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#fab-foundry-list").innerHTML = foundries.map((m) => infoCard(m)).join("");
+
 // ---- Tabs ----
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".tab-panel");
