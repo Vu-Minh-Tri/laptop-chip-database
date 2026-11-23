@@ -28,8 +28,28 @@
         </div>
       </section>
 
-      <p id="result-count" class="result-count" aria-live="polite"></p>
-      <section id="chip-list" class="chip-grid" aria-label="Chips"></section>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button id="tab-chips" class="tab active" role="tab" aria-selected="true" aria-controls="panel-chips" data-tab="chips">Chips</button>
+        <button id="tab-suffixes" class="tab" role="tab" aria-selected="false" aria-controls="panel-suffixes" data-tab="suffixes">Chip Suffixes</button>
+        <button id="tab-ram" class="tab" role="tab" aria-selected="false" aria-controls="panel-ram" data-tab="ram">RAM Channel Modes</button>
+      </nav>
+
+      <section id="panel-chips" class="tab-panel active" role="tabpanel" aria-labelledby="tab-chips">
+        <p id="result-count" class="result-count" aria-live="polite"></p>
+        <div id="chip-list" class="chip-grid"></div>
+      </section>
+
+      <section id="panel-suffixes" class="tab-panel" role="tabpanel" aria-labelledby="tab-suffixes" hidden>
+        <h2 class="panel-title">What chip suffixes mean</h2>
+        <p class="panel-intro">The letter at the end of a laptop CPU name (like the <strong>U</strong> in Ryzen 7 7840U) tells you the chip's power class and intended use.</p>
+        <div id="suffix-list" class="info-grid"></div>
+      </section>
+
+      <section id="panel-ram" class="tab-panel" role="tabpanel" aria-labelledby="tab-ram" hidden>
+        <h2 class="panel-title">RAM channel modes &amp; their effects</h2>
+        <p class="panel-intro">Memory channels determine how much bandwidth your RAM — especially integrated graphics — can actually use.</p>
+        <div id="ram-list" class="info-grid"></div>
+      </section>
     </main>
     <script src="app.js"></script>
   </body>

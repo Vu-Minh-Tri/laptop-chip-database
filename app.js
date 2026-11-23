@@ -38,3 +38,61 @@ function render() {
 search.addEventListener("input", render);
 typeFilter.addEventListener("change", render);
 render();
+
+// ---- Chip suffix / power-class reference ----
+const suffixes = [
+  { code: "U", maker: "Intel & AMD", name: "Ultra-low power", detail: "~9–15W TDP. Built for thin-and-light laptops and long battery life. Best for office work, browsing, streaming; not ideal for sustained heavy loads.", tone: "eco" },
+  { code: "P", maker: "Intel (12th gen+)", name: "Performance thin-and-light", detail: "~28W TDP. A middle ground between U and H — more headroom in slim chassis. Good for heavier multitasking and light creative work.", tone: "mid" },
+  { code: "G7 / G5", maker: "AMD (Ryzen 4000/5000 era)", name: "Graphics tier marker", detail: "The G-number indicated the strength of the integrated Radeon GPU (G7 = strongest, e.g. Vega 11 / Radeon Graphics 8 CU). On newer chips this role is filled by model numbers like 780M.", tone: "gpu" },
+  { code: "H", maker: "Intel & AMD", name: "High performance", detail: "~45W TDP. Found in gaming and creator laptops. Much higher sustained clocks, but hotter and shorter battery life.", tone: "perf" },
+  { code: "HS", maker: "AMD (and Intel in some SKUs)", name: "High performance, slim", detail: "~35W tuned variant of H. Near-H performance in thinner chassis with tighter power/thermal limits.", tone: "perf" },
+  { code: "HX", maker: "Intel & AMD", name: "Enthusiast / desktop-class", detail: "55W+ and often unlocked. Desktop silicon repackaged for the biggest gaming/workstation laptops. Maximum performance, minimal concern for battery or noise.", tone: "max" },
+  { code: "Y", maker: "Intel (older)", name: "Extreme low power", detail: "~5–7W TDP for fanless and ultra-slate devices. Superseded on recent Intel parts by the U class and Core Ultra naming.", tone: "eco" },
+  { code: "U-H spectrum (Apple)", maker: "Apple", name: "No suffix system", detail: "Apple's M-series doesn't use U/P/H letters at all. Instead, chips are tiered by model (M3 → M3 Pro → M3 Max) and each chip mixes Performance (P) and Efficiency (E) cores internally. Active vs fanless cooling is what decides real-world speed, not a letter.", tone: "apple" },
+  { code: "X / XE", maker: "Intel", name: "Exceptional / unlocked", detail: "Top-binned, highest-clocks part of a generation (e.g. i9-12900HK/XE variants). Rare in laptops; means 'best bin, highest power envelope'.", tone: "max" },
+  { code: "K", maker: "Intel (mostly desktop)", name: "Unlocked multiplier", detail: "Rarely seen in laptops (some XE/HX parts allow overclocking). K marks an unlocked chip intended for enthusiast tuning.", tone: "max" },
+  { code: "F", maker: "Intel", name: "No integrated graphics", detail: "Chip without an iGPU — requires a discrete GPU. Uncommon in laptops since most designs rely on the iGPU for battery-friendly display output.", tone: "note" },
+  { code: "vPro / Business (T-family)", maker: "Intel", name: "Manageability / vPro branding", detail: "Some OEMs use letters like T or vPro tags to mark manageability-enabled SKUs aimed at fleets rather than raw performance tiers.", tone: "note" }
+];
+
+const ramModes = [
+  { mode: "Single-channel (1x stick)", effect: "Only one 64-bit memory path is active. Bandwidth is halved vs dual-channel — typically 10–30% lower FPS on integrated graphics and slightly higher latency/stutter in CPU-heavy tasks. Fine for basic use; the biggest real-world upgrade you can make is adding a second matching stick.", tone: "bad" },
+  { mode: "Dual-channel (2 matched sticks)", effect: "Two 64-bit paths run in parallel, roughly doubling bandwidth (~128-bit total). The sweet spot for laptops: best iGPU performance, smoother multitasking, minimal battery cost. Always prefer 2x smaller sticks over 1x large stick if you use integrated graphics.", tone: "good" },
+  { mode: "Flex / Asymmetric mode", effect: "When two sticks differ in size (e.g. 8GB + 16GB), the matching portion (8+8=16GB) runs dual-channel and the remainder (8GB) runs single-channel. Performance sits between the two modes — better than pure single-channel, slightly worse than true dual-channel if you exceed the symmetric range.", tone: "mid" },
+  { mode: "Quad-channel", effect: "Four memory paths (~256-bit). Essentially absent from mainstream laptops due to board space and power; found only in workstation/server-class mobile platforms. Massive bandwidth for scientific workloads and huge VMs; negligible benefit for gaming.", tone: "good" },
+  { mode: "Channel mode & iGPUs", effect: "Integrated GPUs have no dedicated VRAM and read from system RAM, so they feel channel loss hardest: single-channel can cut iGPU frame rates by 20–40%. If you buy a laptop with Radeon 780M / Intel Arc graphics, dual-channel RAM is effectively mandatory for advertised performance.", tone: "tip" },
+  { mode: "Mixed speed/timings", effect: "Mismatched modules run at the slowest stick's speed and loosest common timings, and may fall back to single-channel or fail to POST. Buy kits rated together (or identical modules) to avoid silently losing bandwidth.", tone: "bad" }
+];
+
+function infoCard(item, titleKey) {
+  return `
+    <article class="info-card tone-${item.tone}">
+      <div class="info-head">
+        <span class="badge">${item.code || item.mode}</span>
+        ${item.maker ? `<span class="info-maker">${item.maker}</span>` : ""}
+      </div>
+      <h3>${item.name || item.mode}</h3>
+      <p>${item.detail || item.effect}</p>
+    </article>`;
+}
+
+document.querySelector("#suffix-list").innerHTML = suffixes.map((s) => infoCard(s)).join("");
+document.querySelector("#ram-list").innerHTML = ramModes.map((m) => infoCard(m)).join("");
+
+// ---- Tabs ----
+const tabs = document.querySelectorAll(".tab");
+const panels = document.querySelectorAll(".tab-panel");
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((t) => {
+      const active = t === tab;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", String(active));
+    });
+    panels.forEach((p) => {
+      const active = p.id === `panel-${tab.dataset.tab}`;
+      p.classList.toggle("active", active);
+      p.hidden = !active;
+    });
+  });
+});
