@@ -32,6 +32,7 @@
         <button id="tab-chips" class="tab active" role="tab" aria-selected="true" aria-controls="panel-chips" data-tab="chips">Chips</button>
         <button id="tab-suffixes" class="tab" role="tab" aria-selected="false" aria-controls="panel-suffixes" data-tab="suffixes">Chip Suffixes</button>
         <button id="tab-ram" class="tab" role="tab" aria-selected="false" aria-controls="panel-ram" data-tab="ram">RAM Channel Modes</button>
+        <button id="tab-brands" class="tab" role="tab" aria-selected="false" aria-controls="panel-brands" data-tab="brands">Chip Brands</button>
         <button id="tab-fabs" class="tab" role="tab" aria-selected="false" aria-controls="panel-fabs" data-tab="fabs">Who Makes The Chips</button>
       </nav>
 
@@ -50,6 +51,17 @@
         <h2 class="panel-title">RAM channel modes &amp; their effects</h2>
         <p class="panel-intro">Memory channels determine how much bandwidth your RAM — especially integrated graphics — can actually use.</p>
         <div id="ram-list" class="info-grid"></div>
+      </section>
+
+      <section id="panel-brands" class="tab-panel" role="tabpanel" aria-labelledby="tab-brands" hidden>
+        <h2 class="panel-title">Laptop chip brands &amp; their naming systems</h2>
+        <p class="panel-intro">A quick tour of every brand you'll see in a laptop spec sheet — CPU makers, GPU makers, and the ARM newcomers — with how each one names its tiers so you can decode a model number at a glance.</p>
+        <h3 class="panel-subtitle">CPU brands</h3>
+        <div id="brand-cpu-list" class="info-grid"></div>
+        <h3 class="panel-subtitle">GPU brands (discrete &amp; integrated)</h3>
+        <div id="brand-gpu-list" class="info-grid"></div>
+        <h3 class="panel-subtitle">ARM / newcomer brands</h3>
+        <div id="brand-arm-list" class="info-grid"></div>
       </section>
 
       <section id="panel-fabs" class="tab-panel" role="tabpanel" aria-labelledby="tab-fabs" hidden>

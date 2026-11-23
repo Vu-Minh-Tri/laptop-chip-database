@@ -102,6 +102,33 @@ const foundries = [
 document.querySelector("#fab-brand-list").innerHTML = fabBrands.map((s) => infoCard(s)).join("");
 document.querySelector("#fab-foundry-list").innerHTML = foundries.map((m) => infoCard(m)).join("");
 
+// ---- Chip brands & their naming systems ----
+const cpuBrands = [
+  { code: "Intel", maker: "Intel Corporation (USA)", name: "Core / Core Ultra", detail: "The long-dominant x86 laptop brand. Naming tiers: Core i3 < i5 < i7 < i9 (budget → enthusiast). Since 2023 the premium line is 'Core Ultra' (Series 1 Meteor Lake, Series 2 Lunar/Arrow Lake) which adds an NPU for AI. The generation number comes first (Ultra 7 155H = Series 1), then tier, then suffix (U/P/H/HX — see the Suffixes tab). Most mainstream Windows laptops still ship Intel.", tone: "intel" },
+  { code: "AMD", maker: "Advanced Micro Devices (USA)", name: "Ryzen", detail: "Intel's x86 rival, strong value + efficiency in laptops since Ryzen 4000. Tiers: Ryzen 3 < 5 < 7 < 9, mirroring Intel's i3–i9. In the 4-digit model number the third digit marks the architecture generation (Ryzen 7 7840U = Zen 4; 8840U = Zen 4 refresh w/ NPU; 860U is actually older Zen 3 — watch out, AMD reuses numbers across generations). Ryzen AI sub-brand marks chips with onboard NPUs.", tone: "amd" },
+  { code: "Apple", maker: "Apple (USA, designs; TSMC fabs)", name: "Apple Silicon (M-series)", detail: "ARM-based SoCs that run every modern Mac: M4 < M4 Pro < M4 Max < M/Ultra for peak workloads. No competing CPU brands exist in Macs — Apple left Intel in 2020 and left its own 'Intel inside' branding behind. Each chip integrates CPU + GPU + Neural Engine + unified memory on one die, which is why Mac spec sheets list 'chip' instead of separate CPU/GPU/RAM lines.", tone: "apple" },
+  { code: "Qualcomm", maker: "Qualcomm (USA)", name: "Snapdragon X", detail: "The ARM CPU brand powering the new wave of Windows 'Copilot+ PCs': Snapdragon X Plus (8 cores) < X Elite (12 cores) < X2 Elite/Extreme (2025 gen). Model numbers look like phone chips (X Elite X1E-84-100 — the trailing digits mark clock/AI tiers). Big battery-life win over x86, but some niche apps/games still have compatibility quirks under emulation.", tone: "gpu" },
+  { code: "MediaTek", maker: "MediaTek (Taiwan)", name: "Kompanio / Dimensity in PCs", detail: "Best known for Chromebook chips (Kompanio 1200/1380/520 etc.) and increasingly for budget ARM Windows tablets/laptops. You'll mostly meet MediaTek in Chromebooks — if a Chromebook isn't Intel/AMD, it almost certainly is.", tone: "eco" }
+];
+
+const gpuBrands = [
+  { code: "NVIDIA", maker: "NVIDIA (USA)", name: "GeForce RTX / GTX", detail: "The market leader for discrete laptop GPUs. Tiers: GTX (older/budget) < RTX 2050/4050 < 4060 < 4070 < 4080 < 4090 (each generation resets: 4060 Laptop ≠ desktop 4060 — laptop SKUs vary wildly by wattage, so check 'TGP' not just the name). Also owns Optimus/Advanced Optimus switching and DLSS upscaling. Integrated graphics? NVIDIA hasn't had one in laptops since the Ion days.", tone: "nvidia" },
+  { code: "AMD", maker: "AMD (USA)", name: "Radeon (integrated + discrete)", detail: "Two flavors: integrated Radeon 600M/700M/800M series built into Ryzen APUs (780M and 890M were the best iGPUs of their generation — named by 80x-tier: 660M < 680M < 760M < 780M < 880M < 890M), and discrete Radeon RX mobile GPUs (RX 7600S…) which are far less common in laptops than NVIDIA's. 'Advantage Edition' laptops pair Ryzen CPU + Radeon GPU + Ryzen chipset for validated tuning.", tone: "gpu" },
+  { code: "Intel", maker: "Intel (USA)", name: "Iris Xe / Arc", detail: "Integrated: UHD Graphics (budget) < Iris Xe (mainstream 11th–13th gen) < Arc integrated graphics (Core Ultra Series 2 'Lunar Lake', much stronger). Discrete: Arc A-series (A530M/A730M, 2022) was Intel's first real dGPU attempt; Arc Battlemage (B-series, 2025) targets mid-range gaming laptops. Historically the most common GPU brand in laptops — nearly every PC has an Intel iGPU even when it also has an NVIDIA card.", tone: "intel" },
+  { code: "Apple", maker: "Apple", name: "GPU inside M-series", detail: "No separate GPU brand — the GPU is part of the SoC, scaled by tier: M4 (up to 10-core GPU) < M4 Pro (up to 20) < M4 Max (up to 40). Includes hardware ray tracing and Media Engine for video. Because it shares 'unified memory' with the CPU, VRAM figures aren't listed separately.", tone: "apple" },
+  { code: "Qualcomm", maker: "Qualcomm", name: "Adreno", detail: "The GPU inside Snapdragon chips (e.g. Adreno in Snapdragon X Elite). Fine for office, video and light games; weakest of the four for serious gaming or GPU compute — drivers and game support on Windows-on-ARM are still catching up.", tone: "note" }
+];
+
+const armBrands = [
+  { code: "ARM Holdings", maker: "ARM Ltd. (UK/Japan)", name: "The blueprint company", detail: "ARM doesn't sell chips — it licenses CPU designs (Cortex-X/A/E cores) to everyone above. When you read 'ARM laptop chip', it means the instruction set is ARM rather than Intel/AMD's x86. Apple, Qualcomm and MediaTek all build on ARM blueprints (Apple designs its own cores under ARM license).", tone: "tip" },
+  { code: "Windows on ARM", maker: "Microsoft + partners", name: "The x86 vs ARM split", detail: "The biggest brand-level divide in laptops today: x86 (Intel/AMD — maximum compatibility) vs ARM (Apple/Qualcomm/MediaTek — better battery life, instant-wake, on-package memory/LPDDR5X). App translation (Rosetta 2 on macOS, Prism on Windows 11) runs the other architecture's software; games and niche drivers remain the weak spot on Windows ARM.", tone: "mid" },
+  { code: "NPU brands", maker: "All of the above", name: "AI engines: Neural Engine / NPU / Hexagon", detail: "Every current laptop chip brand now advertises an AI accelerator: Apple 'Neural Engine', Intel 'AI Boost' NPU (Core Ultra), AMD 'Ryzen AI' (XDNA), Qualcomm 'Hexagon'. Measured in TOPS — Copilot+ PCs require 40+ TOPS. It barely affects everyday speed but matters for local AI features and future Windows capabilities.", tone: "perf" }
+];
+
+document.querySelector("#brand-cpu-list").innerHTML = cpuBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#brand-gpu-list").innerHTML = gpuBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#brand-arm-list").innerHTML = armBrands.map((s) => infoCard(s)).join("");
+
 // ---- Tabs ----
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".tab-panel");
