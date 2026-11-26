@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Search and compare laptop chips." />
+    <meta name="description" content="Search laptop chips and understand processor and graphics model suffixes." />
     <title>Laptop Chip Database</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -12,13 +12,15 @@
       <header>
         <p class="eyebrow">Open hardware data</p>
         <h1>Laptop Chip Database</h1>
-        <p class="subtitle">Look up laptop processors and graphics chips.</p>
+        <p class="subtitle">Look up laptop processors, graphics chips, and what their model labels mean.</p>
       </header>
 
       <section class="search-panel" aria-label="Chip search">
-        <label for="search">Search chips</label>
-        <input id="search" type="search" placeholder="Try AMD Ryzen 7 7840U" autocomplete="off" />
-        <div class="filters">
+        <div>
+          <label for="search">Search chips</label>
+          <input id="search" type="search" placeholder="Try AMD Ryzen 7 7840U" autocomplete="off" />
+        </div>
+        <div>
           <label for="type-filter">Type</label>
           <select id="type-filter">
             <option value="all">All chips</option>
@@ -30,6 +32,35 @@
 
       <p id="result-count" class="result-count" aria-live="polite"></p>
       <section id="chip-list" class="chip-grid" aria-label="Chips"></section>
+
+      <section class="glossary-section" aria-labelledby="glossary-title">
+        <div class="glossary-heading">
+          <div>
+            <p class="eyebrow">Model-name guide</p>
+            <h2 id="glossary-title">Chip suffix glossary</h2>
+          </div>
+          <p class="glossary-note">Suffix meanings can change across product generations. These are common meanings, not a substitute for checking a specific chip's official specifications.</p>
+        </div>
+        <div class="glossary-controls">
+          <div>
+            <label for="suffix-search">Find a suffix or meaning</label>
+            <input id="suffix-search" type="search" placeholder="Search U, HX, Max-Q, low power…" autocomplete="off" />
+          </div>
+          <div>
+            <label for="maker-filter">Chip maker</label>
+            <select id="maker-filter">
+              <option value="all">All makers</option>
+              <option value="AMD">AMD</option>
+              <option value="Apple">Apple</option>
+              <option value="Intel">Intel</option>
+              <option value="NVIDIA">NVIDIA</option>
+              <option value="Qualcomm">Qualcomm</option>
+            </select>
+          </div>
+        </div>
+        <p id="suffix-count" class="result-count" aria-live="polite"></p>
+        <div id="suffix-list" class="suffix-list"></div>
+      </section>
     </main>
     <script src="app.js"></script>
   </body>
