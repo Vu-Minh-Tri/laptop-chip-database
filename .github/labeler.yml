@@ -1,0 +1,14 @@
+# Apply labels based on the files changed in a pull request.
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.html"
+          - "*.css"
+          - "*.js"
+          - "**/*.html"
+          - "**/*.css"
+          - "**/*.js"
