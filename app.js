@@ -38,3 +38,111 @@ function render() {
 search.addEventListener("input", render);
 typeFilter.addEventListener("change", render);
 render();
+
+// ---- Chip suffix / power-class reference ----
+const suffixes = [
+  { code: "U", maker: "Intel & AMD", name: "Ultra-low power", detail: "~9–15W TDP. Built for thin-and-light laptops and long battery life. Best for office work, browsing, streaming; not ideal for sustained heavy loads.", tone: "eco" },
+  { code: "P", maker: "Intel (12th gen+)", name: "Performance thin-and-light", detail: "~28W TDP. A middle ground between U and H — more headroom in slim chassis. Good for heavier multitasking and light creative work.", tone: "mid" },
+  { code: "G7 / G5", maker: "AMD (Ryzen 4000/5000 era)", name: "Graphics tier marker", detail: "The G-number indicated the strength of the integrated Radeon GPU (G7 = strongest, e.g. Vega 11 / Radeon Graphics 8 CU). On newer chips this role is filled by model numbers like 780M.", tone: "gpu" },
+  { code: "H", maker: "Intel & AMD", name: "High performance", detail: "~45W TDP. Found in gaming and creator laptops. Much higher sustained clocks, but hotter and shorter battery life.", tone: "perf" },
+  { code: "HS", maker: "AMD (and Intel in some SKUs)", name: "High performance, slim", detail: "~35W tuned variant of H. Near-H performance in thinner chassis with tighter power/thermal limits.", tone: "perf" },
+  { code: "HX", maker: "Intel & AMD", name: "Enthusiast / desktop-class", detail: "55W+ and often unlocked. Desktop silicon repackaged for the biggest gaming/workstation laptops. Maximum performance, minimal concern for battery or noise.", tone: "max" },
+  { code: "Y", maker: "Intel (older)", name: "Extreme low power", detail: "~5–7W TDP for fanless and ultra-slate devices. Superseded on recent Intel parts by the U class and Core Ultra naming.", tone: "eco" },
+  { code: "U-H spectrum (Apple)", maker: "Apple", name: "No suffix system", detail: "Apple's M-series doesn't use U/P/H letters at all. Instead, chips are tiered by model (M3 → M3 Pro → M3 Max) and each chip mixes Performance (P) and Efficiency (E) cores internally. Active vs fanless cooling is what decides real-world speed, not a letter.", tone: "apple" },
+  { code: "X / XE", maker: "Intel", name: "Exceptional / unlocked", detail: "Top-binned, highest-clocks part of a generation (e.g. i9-12900HK/XE variants). Rare in laptops; means 'best bin, highest power envelope'.", tone: "max" },
+  { code: "K", maker: "Intel (mostly desktop)", name: "Unlocked multiplier", detail: "Rarely seen in laptops (some XE/HX parts allow overclocking). K marks an unlocked chip intended for enthusiast tuning.", tone: "max" },
+  { code: "F", maker: "Intel", name: "No integrated graphics", detail: "Chip without an iGPU — requires a discrete GPU. Uncommon in laptops since most designs rely on the iGPU for battery-friendly display output.", tone: "note" },
+  { code: "vPro / Business (T-family)", maker: "Intel", name: "Manageability / vPro branding", detail: "Some OEMs use letters like T or vPro tags to mark manageability-enabled SKUs aimed at fleets rather than raw performance tiers.", tone: "note" }
+];
+
+const ramModes = [
+  { mode: "Single-channel (1x stick)", effect: "Only one 64-bit memory path is active. Bandwidth is halved vs dual-channel — typically 10–30% lower FPS on integrated graphics and slightly higher latency/stutter in CPU-heavy tasks. Fine for basic use; the biggest real-world upgrade you can make is adding a second matching stick.", tone: "bad" },
+  { mode: "Dual-channel (2 matched sticks)", effect: "Two 64-bit paths run in parallel, roughly doubling bandwidth (~128-bit total). The sweet spot for laptops: best iGPU performance, smoother multitasking, minimal battery cost. Always prefer 2x smaller sticks over 1x large stick if you use integrated graphics.", tone: "good" },
+  { mode: "Flex / Asymmetric mode", effect: "When two sticks differ in size (e.g. 8GB + 16GB), the matching portion (8+8=16GB) runs dual-channel and the remainder (8GB) runs single-channel. Performance sits between the two modes — better than pure single-channel, slightly worse than true dual-channel if you exceed the symmetric range.", tone: "mid" },
+  { mode: "Quad-channel", effect: "Four memory paths (~256-bit). Essentially absent from mainstream laptops due to board space and power; found only in workstation/server-class mobile platforms. Massive bandwidth for scientific workloads and huge VMs; negligible benefit for gaming.", tone: "good" },
+  { mode: "Channel mode & iGPUs", effect: "Integrated GPUs have no dedicated VRAM and read from system RAM, so they feel channel loss hardest: single-channel can cut iGPU frame rates by 20–40%. If you buy a laptop with Radeon 780M / Intel Arc graphics, dual-channel RAM is effectively mandatory for advertised performance.", tone: "tip" },
+  { mode: "Mixed speed/timings", effect: "Mismatched modules run at the slowest stick's speed and loosest common timings, and may fall back to single-channel or fail to POST. Buy kits rated together (or identical modules) to avoid silently losing bandwidth.", tone: "bad" }
+];
+
+function infoCard(item, titleKey) {
+  return `
+    <article class="info-card tone-${item.tone}">
+      <div class="info-head">
+        <span class="badge">${item.code || item.mode}</span>
+        ${item.maker ? `<span class="info-maker">${item.maker}</span>` : ""}
+      </div>
+      <h3>${item.name || item.mode}</h3>
+      <p>${item.detail || item.effect}</p>
+    </article>`;
+}
+
+document.querySelector("#suffix-list").innerHTML = suffixes.map((s) => infoCard(s)).join("");
+document.querySelector("#ram-list").innerHTML = ramModes.map((m) => infoCard(m)).join("");
+
+// ---- Who actually manufactures (fabs) each chip brand ----
+const fabBrands = [
+  { code: "Apple", maker: "Designer only (fabless)", name: "Designed by Apple, fabbed by TSMC", detail: "Every M-series chip (M1 → M4 and beyond) is designed in California but manufactured by TSMC — on N5 for M1/M2, N3B/N3E for M3/M4, at fabs in Hsinchu and Kaohsiung, Taiwan. Apple books huge volumes of TSMC's most advanced nodes; packaging happens largely in Asia as well.", tone: "apple" },
+  { code: "AMD", maker: "Fabless since 2009", name: "Designed by AMD, fabbed mostly by TSMC", detail: "AMD spun off its factories into GlobalFoundries in 2009. Today all modern laptop chips — Ryzen 6000/7000/8000/9000 CPUs and Radeon iGPUs/dGPUs — are made by TSMC (7nm → 4nm, with Zen 5 parts on N4/N3). Some older I/O and RF companion chips still came from GlobalFoundries.", tone: "amd" },
+  { code: "Intel", maker: "IDM (owns its fabs)", name: "Designed AND manufactured by Intel", detail: "Intel is the last major x86 vendor that builds its own silicon: Core U/P/H laptop chips were fabbed on Intel 7 / Intel 4 in Oregon, Arizona, Ireland and Israel. Since Meteor Lake (Core Ultra), Intel also uses TSMC for some tiles (e.g. the GPU tile) and Samsung for others — a hybrid 'Intel Foundry + external foundry' model — while expanding new fabs in Arizona, Germany and Poland.", tone: "intel" },
+  { code: "NVIDIA", maker: "Fabless", name: "Designed by NVIDIA, fabbed by TSMC", detail: "NVIDIA owns no factories. GeForce RTX laptop GPUs (Ampere, Ada Lovelace, Blackwell) are manufactured by TSMC — typically on 8N/4N-class nodes. The 'Laptop GPU' die is often a binned/downclocked version of the desktop chip, built at the same TSMC fabs.", tone: "nvidia" },
+  { code: "Qualcomm", maker: "Fabless", name: "Snapdragon X: designed by Qualcomm, fabbed by TSMC", detail: "The Snapdragon X Elite/X Plus ARM laptop chips are made by TSMC on N4. Qualcomm (like Apple and AMD) relies entirely on TSMC for its cutting-edge mobile/laptop silicon.", tone: "gpu" },
+  { code: "MediaTek", maker: "Fabless", name: "Fabbed by TSMC (and occasionally others)", detail: "Behind fewer mainstream laptops today, but its Dimensity/companion silicon is TSMC-manufactured; MediaTek designs SoCs used in Chromebooks and budget Windows arm machines.", tone: "note" },
+  { code: "Samsung Exynos", maker: "IDM", name: "Designed and fabbed by Samsung", detail: "Samsung both designs and manufactures its own chips in its Korean fabs (Hwaseong/Pyeongtaek). It also runs a foundry business making chips for NVIDIA (older modems/GPUs historically) and others — with mixed results on the most advanced nodes versus TSMC.", tone: "note" }
+];
+
+const foundries = [
+  { mode: "TSMC (Taiwan)", effect: "The world's #1 contract factory — makes the vast majority of cutting-edge chips: Apple M-series, AMD Ryzen/Radeon, NVIDIA GeForce, Qualcomm Snapdragon. Leading nodes (N5/N4/N3) run in Hsinchu, Taichung and Kaohsiung, with new fabs in Arizona, Japan and Germany. If your premium laptop chip isn't Intel, it's almost certainly TSMC-made.", tone: "good" },
+  { mode: "Intel Foundry (USA/EU)", effect: "Intel's own factories, now also selling capacity to outside customers. Produces Intel's Core series plus selected partners' chips on Intel 3/Intel 18A nodes. Fabs in Oregon, Arizona, New Mexico; under construction in Ohio, Germany and Poland.", tone: "perf" },
+  { mode: "Samsung Foundry (Korea)", effect: "#2 contract maker. Fabbed some older NVIDIA and Qualcomm parts and Intel's low-power Atom/SoC tiles (Meteor Lake's base tile came from Samsung). Strong in memory (DRAM/NAND) — the RAM in your laptop likely comes from Samsung, SK hynix or Micron regardless of CPU maker.", tone: "mid" },
+  { mode: "GlobalFoundries", effect: "The company AMD sold its fabs to in 2009. No longer chases the smallest nodes; makes older/specialty chips — some AMD I/O dies, RF and power-management components found inside laptops.", tone: "eco" },
+  { mode: "SMIC / Hua Hong (China)", effect: "Chinese contract fabs working mainly on mature nodes (28nm+). Rarely seen in premium Western laptop CPUs, but increasingly relevant for budget components, controllers and domestic-market SoCs.", tone: "note" },
+  { mode: "Assembly & test (OSATs)", effect: "After wafer fabrication, chips are cut, packaged and tested by firms like ASE, Amkor and JCET — mostly in Taiwan, Malaysia, South Korea and China. 'Made where?' therefore has three answers: wafer fab, packaging site, and final assembly of the laptop itself.", tone: "tip" }
+];
+
+document.querySelector("#fab-brand-list").innerHTML = fabBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#fab-foundry-list").innerHTML = foundries.map((m) => infoCard(m)).join("");
+
+// ---- Chip brands & their naming systems ----
+const cpuBrands = [
+  { code: "Intel", maker: "Intel Corporation (USA)", name: "Core / Core Ultra", detail: "The long-dominant x86 laptop brand. Naming tiers: Core i3 < i5 < i7 < i9 (budget → enthusiast). Since 2023 the premium line is 'Core Ultra' (Series 1 Meteor Lake, Series 2 Lunar/Arrow Lake) which adds an NPU for AI. The generation number comes first (Ultra 7 155H = Series 1), then tier, then suffix (U/P/H/HX — see the Suffixes tab). Most mainstream Windows laptops still ship Intel.", tone: "intel" },
+  { code: "AMD", maker: "Advanced Micro Devices (USA)", name: "Ryzen", detail: "Intel's x86 rival, strong value + efficiency in laptops since Ryzen 4000. Tiers: Ryzen 3 < 5 < 7 < 9, mirroring Intel's i3–i9. In the 4-digit model number the third digit marks the architecture generation (Ryzen 7 7840U = Zen 4; 8840U = Zen 4 refresh w/ NPU; 860U is actually older Zen 3 — watch out, AMD reuses numbers across generations). Ryzen AI sub-brand marks chips with onboard NPUs.", tone: "amd" },
+  { code: "Apple", maker: "Apple (USA, designs; TSMC fabs)", name: "Apple Silicon (M-series)", detail: "ARM-based SoCs that run every modern Mac: M4 < M4 Pro < M4 Max < M/Ultra for peak workloads. No competing CPU brands exist in Macs — Apple left Intel in 2020 and left its own 'Intel inside' branding behind. Each chip integrates CPU + GPU + Neural Engine + unified memory on one die, which is why Mac spec sheets list 'chip' instead of separate CPU/GPU/RAM lines.", tone: "apple" },
+  { code: "Qualcomm", maker: "Qualcomm (USA)", name: "Snapdragon X", detail: "The ARM CPU brand powering the new wave of Windows 'Copilot+ PCs': Snapdragon X Plus (8 cores) < X Elite (12 cores) < X2 Elite/Extreme (2025 gen). Model numbers look like phone chips (X Elite X1E-84-100 — the trailing digits mark clock/AI tiers). Big battery-life win over x86, but some niche apps/games still have compatibility quirks under emulation.", tone: "gpu" },
+  { code: "MediaTek", maker: "MediaTek (Taiwan)", name: "Kompanio / Dimensity in PCs", detail: "Best known for Chromebook chips (Kompanio 1200/1380/520 etc.) and increasingly for budget ARM Windows tablets/laptops. You'll mostly meet MediaTek in Chromebooks — if a Chromebook isn't Intel/AMD, it almost certainly is.", tone: "eco" }
+];
+
+const gpuBrands = [
+  { code: "NVIDIA", maker: "NVIDIA (USA)", name: "GeForce RTX / GTX", detail: "The market leader for discrete laptop GPUs. Tiers: GTX (older/budget) < RTX 2050/4050 < 4060 < 4070 < 4080 < 4090 (each generation resets: 4060 Laptop ≠ desktop 4060 — laptop SKUs vary wildly by wattage, so check 'TGP' not just the name). Also owns Optimus/Advanced Optimus switching and DLSS upscaling. Integrated graphics? NVIDIA hasn't had one in laptops since the Ion days.", tone: "nvidia" },
+  { code: "AMD", maker: "AMD (USA)", name: "Radeon (integrated + discrete)", detail: "Two flavors: integrated Radeon 600M/700M/800M series built into Ryzen APUs (780M and 890M were the best iGPUs of their generation — named by 80x-tier: 660M < 680M < 760M < 780M < 880M < 890M), and discrete Radeon RX mobile GPUs (RX 7600S…) which are far less common in laptops than NVIDIA's. 'Advantage Edition' laptops pair Ryzen CPU + Radeon GPU + Ryzen chipset for validated tuning.", tone: "gpu" },
+  { code: "Intel", maker: "Intel (USA)", name: "Iris Xe / Arc", detail: "Integrated: UHD Graphics (budget) < Iris Xe (mainstream 11th–13th gen) < Arc integrated graphics (Core Ultra Series 2 'Lunar Lake', much stronger). Discrete: Arc A-series (A530M/A730M, 2022) was Intel's first real dGPU attempt; Arc Battlemage (B-series, 2025) targets mid-range gaming laptops. Historically the most common GPU brand in laptops — nearly every PC has an Intel iGPU even when it also has an NVIDIA card.", tone: "intel" },
+  { code: "Apple", maker: "Apple", name: "GPU inside M-series", detail: "No separate GPU brand — the GPU is part of the SoC, scaled by tier: M4 (up to 10-core GPU) < M4 Pro (up to 20) < M4 Max (up to 40). Includes hardware ray tracing and Media Engine for video. Because it shares 'unified memory' with the CPU, VRAM figures aren't listed separately.", tone: "apple" },
+  { code: "Qualcomm", maker: "Qualcomm", name: "Adreno", detail: "The GPU inside Snapdragon chips (e.g. Adreno in Snapdragon X Elite). Fine for office, video and light games; weakest of the four for serious gaming or GPU compute — drivers and game support on Windows-on-ARM are still catching up.", tone: "note" }
+];
+
+const armBrands = [
+  { code: "ARM Holdings", maker: "ARM Ltd. (UK/Japan)", name: "The blueprint company", detail: "ARM doesn't sell chips — it licenses CPU designs (Cortex-X/A/E cores) to everyone above. When you read 'ARM laptop chip', it means the instruction set is ARM rather than Intel/AMD's x86. Apple, Qualcomm and MediaTek all build on ARM blueprints (Apple designs its own cores under ARM license).", tone: "tip" },
+  { code: "Windows on ARM", maker: "Microsoft + partners", name: "The x86 vs ARM split", detail: "The biggest brand-level divide in laptops today: x86 (Intel/AMD — maximum compatibility) vs ARM (Apple/Qualcomm/MediaTek — better battery life, instant-wake, on-package memory/LPDDR5X). App translation (Rosetta 2 on macOS, Prism on Windows 11) runs the other architecture's software; games and niche drivers remain the weak spot on Windows ARM.", tone: "mid" },
+  { code: "NPU brands", maker: "All of the above", name: "AI engines: Neural Engine / NPU / Hexagon", detail: "Every current laptop chip brand now advertises an AI accelerator: Apple 'Neural Engine', Intel 'AI Boost' NPU (Core Ultra), AMD 'Ryzen AI' (XDNA), Qualcomm 'Hexagon'. Measured in TOPS — Copilot+ PCs require 40+ TOPS. It barely affects everyday speed but matters for local AI features and future Windows capabilities.", tone: "perf" }
+];
+
+document.querySelector("#brand-cpu-list").innerHTML = cpuBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#brand-gpu-list").innerHTML = gpuBrands.map((s) => infoCard(s)).join("");
+document.querySelector("#brand-arm-list").innerHTML = armBrands.map((s) => infoCard(s)).join("");
+
+// ---- Tabs ----
+const tabs = document.querySelectorAll(".tab");
+const panels = document.querySelectorAll(".tab-panel");
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((t) => {
+      const active = t === tab;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", String(active));
+    });
+    panels.forEach((p) => {
+      const active = p.id === `panel-${tab.dataset.tab}`;
+      p.classList.toggle("active", active);
+      p.hidden = !active;
+    });
+  });
+});
