@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Search and compare laptop chips." />
+    <meta name="description" content="Search laptop chips and learn about suffixes, memory, chip brands, and manufacturers." />
     <title>Laptop Chip Database</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -12,13 +12,15 @@
       <header>
         <p class="eyebrow">Open hardware data</p>
         <h1>Laptop Chip Database</h1>
-        <p class="subtitle">Look up laptop processors and graphics chips.</p>
+        <p class="subtitle">Look up laptop processors and graphics chips, and learn what their model labels mean.</p>
       </header>
 
       <section class="search-panel" aria-label="Chip search">
-        <label for="search">Search chips</label>
-        <input id="search" type="search" placeholder="Try AMD Ryzen 7 7840U" autocomplete="off" />
-        <div class="filters">
+        <div>
+          <label for="search">Search chips</label>
+          <input id="search" type="search" placeholder="Try AMD Ryzen 7 7840U" autocomplete="off" />
+        </div>
+        <div>
           <label for="type-filter">Type</label>
           <select id="type-filter">
             <option value="all">All chips</option>
@@ -30,45 +32,45 @@
 
       <nav class="tabs" role="tablist" aria-label="Sections">
         <button id="tab-chips" class="tab active" role="tab" aria-selected="true" aria-controls="panel-chips" data-tab="chips">Chips</button>
-        <button id="tab-suffixes" class="tab" role="tab" aria-selected="false" aria-controls="panel-suffixes" data-tab="suffixes">Chip Suffixes</button>
-        <button id="tab-ram" class="tab" role="tab" aria-selected="false" aria-controls="panel-ram" data-tab="ram">RAM Channel Modes</button>
-        <button id="tab-brands" class="tab" role="tab" aria-selected="false" aria-controls="panel-brands" data-tab="brands">Chip Brands</button>
-        <button id="tab-fabs" class="tab" role="tab" aria-selected="false" aria-controls="panel-fabs" data-tab="fabs">Who Makes The Chips</button>
+        <button id="tab-suffixes" class="tab" role="tab" aria-selected="false" aria-controls="panel-suffixes" data-tab="suffixes">Chip suffixes</button>
+        <button id="tab-ram" class="tab" role="tab" aria-selected="false" aria-controls="panel-ram" data-tab="ram">Memory</button>
+        <button id="tab-brands" class="tab" role="tab" aria-selected="false" aria-controls="panel-brands" data-tab="brands">Chip brands</button>
+        <button id="tab-fabs" class="tab" role="tab" aria-selected="false" aria-controls="panel-fabs" data-tab="fabs">Manufacturing</button>
       </nav>
 
       <section id="panel-chips" class="tab-panel active" role="tabpanel" aria-labelledby="tab-chips">
         <p id="result-count" class="result-count" aria-live="polite"></p>
-        <div id="chip-list" class="chip-grid"></div>
+        <div id="chip-list" class="chip-grid" aria-label="Chips"></div>
       </section>
 
       <section id="panel-suffixes" class="tab-panel" role="tabpanel" aria-labelledby="tab-suffixes" hidden>
-        <h2 class="panel-title">What chip suffixes mean</h2>
-        <p class="panel-intro">The letter at the end of a laptop CPU name (like the <strong>U</strong> in Ryzen 7 7840U) tells you the chip's power class and intended use.</p>
+        <h2 class="panel-title">Chip suffix glossary</h2>
+        <p class="panel-intro">Suffix meanings can vary across generations. Treat these as common usage and verify the full model against manufacturer specifications.</p>
         <div id="suffix-list" class="info-grid"></div>
       </section>
 
       <section id="panel-ram" class="tab-panel" role="tabpanel" aria-labelledby="tab-ram" hidden>
-        <h2 class="panel-title">RAM channel modes &amp; their effects</h2>
-        <p class="panel-intro">Memory channels determine how much bandwidth your RAM — especially integrated graphics — can actually use.</p>
+        <h2 class="panel-title">Memory configurations</h2>
+        <p class="panel-intro">Memory channels, soldered memory, and unified-memory designs affect bandwidth, upgrades, and integrated graphics performance.</p>
         <div id="ram-list" class="info-grid"></div>
       </section>
 
       <section id="panel-brands" class="tab-panel" role="tabpanel" aria-labelledby="tab-brands" hidden>
-        <h2 class="panel-title">Laptop chip brands &amp; their naming systems</h2>
-        <p class="panel-intro">A quick tour of every brand you'll see in a laptop spec sheet — CPU makers, GPU makers, and the ARM newcomers — with how each one names its tiers so you can decode a model number at a glance.</p>
-        <h3 class="panel-subtitle">CPU brands</h3>
+        <h2 class="panel-title">Chip brands and naming systems</h2>
+        <p class="panel-intro">A concise guide to laptop CPU, GPU, and Arm platform brands. Check full model numbers and device specifications for exact capabilities.</p>
+        <h3 class="panel-subtitle">CPU and SoC brands</h3>
         <div id="brand-cpu-list" class="info-grid"></div>
-        <h3 class="panel-subtitle">GPU brands (discrete &amp; integrated)</h3>
+        <h3 class="panel-subtitle">Graphics brands</h3>
         <div id="brand-gpu-list" class="info-grid"></div>
-        <h3 class="panel-subtitle">ARM / newcomer brands</h3>
+        <h3 class="panel-subtitle">Arm and AI terms</h3>
         <div id="brand-arm-list" class="info-grid"></div>
       </section>
 
       <section id="panel-fabs" class="tab-panel" role="tabpanel" aria-labelledby="tab-fabs" hidden>
-        <h2 class="panel-title">Which company actually manufactures each chip</h2>
-        <p class="panel-intro">The brand on the box (Intel, AMD, Apple, NVIDIA) is often <strong>not</strong> the factory that etches the silicon. Companies that only design chips are called <em>fabless</em>; companies that own factories are <em>IDMs</em>; contract factories are <em>foundries</em>. Here's who fabbs what:</p>
+        <h2 class="panel-title">Who designs and manufactures chips?</h2>
+        <p class="panel-intro">The company whose name is on a chip is not always the company that fabricates it. Design, wafer fabrication, packaging, and laptop assembly can involve different companies.</p>
         <div id="fab-brand-list" class="info-grid"></div>
-        <h3 class="panel-subtitle">Foundry cheat sheet</h3>
+        <h3 class="panel-subtitle">Manufacturing terms</h3>
         <div id="fab-foundry-list" class="info-grid"></div>
       </section>
     </main>
