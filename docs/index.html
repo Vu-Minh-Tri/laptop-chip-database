@@ -52,12 +52,56 @@
     </main>
     <script>
       const chips = [
+        { name: "AMD Ryzen 3 7330U", type: "CPU", maker: "AMD", specs: "4 cores / 8 threads · Zen 3 · 15–30W · 2023" },
+        { name: "AMD Ryzen 5 7535U", type: "CPU", maker: "AMD", specs: "6 cores / 12 threads · Zen 3+ · 15–30W · 2023" },
+        { name: "AMD Ryzen 5 7640U", type: "CPU", maker: "AMD", specs: "6 cores / 12 threads · Zen 4 · 15–30W · 2023" },
         { name: "AMD Ryzen 7 7840U", type: "CPU", maker: "AMD", specs: "8 cores / 16 threads · Zen 4 · 15–30W · 2023" },
-        { name: "Intel Core Ultra 7 155H", type: "CPU", maker: "Intel", specs: "16 cores / 22 threads · Meteor Lake · 2023" },
-        { name: "Apple M3", type: "CPU", maker: "Apple", specs: "8-core CPU · Apple silicon · 2023" },
-        { name: "NVIDIA GeForce RTX 4060 Laptop", type: "GPU", maker: "NVIDIA", specs: "3072 CUDA cores · Ada Lovelace · laptop power varies · 2023" },
+        { name: "AMD Ryzen 7 8840U", type: "CPU", maker: "AMD", specs: "8 cores / 16 threads · Zen 4 · Ryzen AI · 2023" },
+        { name: "AMD Ryzen 9 7940HS", type: "CPU", maker: "AMD", specs: "8 cores / 16 threads · Zen 4 · slim performance · 2023" },
+        { name: "AMD Ryzen 9 7945HX", type: "CPU", maker: "AMD", specs: "16 cores / 32 threads · Zen 4 · high-performance · 2023" },
+        { name: "AMD Ryzen AI 9 HX 370", type: "CPU", maker: "AMD", specs: "12 cores / 24 threads · Zen 5 · NPU · 2024" },
+
+        { name: "Intel Core i5-1335U", type: "CPU", maker: "Intel", specs: "10 cores / 12 threads · Raptor Lake · U series · 2023" },
+        { name: "Intel Core i7-1360P", type: "CPU", maker: "Intel", specs: "12 cores / 16 threads · Raptor Lake · P series · 2023" },
+        { name: "Intel Core i7-13700H", type: "CPU", maker: "Intel", specs: "14 cores / 20 threads · Raptor Lake · H series · 2023" },
+        { name: "Intel Core i9-13980HX", type: "CPU", maker: "Intel", specs: "24 cores / 32 threads · Raptor Lake · HX series · 2023" },
+        { name: "Intel Core Ultra 5 125H", type: "CPU", maker: "Intel", specs: "14 cores / 18 threads · Meteor Lake · NPU · 2023" },
+        { name: "Intel Core Ultra 7 155H", type: "CPU", maker: "Intel", specs: "16 cores / 22 threads · Meteor Lake · NPU · 2023" },
+        { name: "Intel Core Ultra 9 185H", type: "CPU", maker: "Intel", specs: "16 cores / 22 threads · Meteor Lake · NPU · 2023" },
+        { name: "Intel Core Ultra 7 258V", type: "CPU", maker: "Intel", specs: "8 cores / 8 threads · Lunar Lake · NPU · 2024" },
+
+        { name: "Apple M1", type: "CPU", maker: "Apple", specs: "8-core CPU · 8-core GPU options · unified memory · 2020" },
+        { name: "Apple M2", type: "CPU", maker: "Apple", specs: "8-core CPU · 8–10-core GPU · unified memory · 2022" },
+        { name: "Apple M3", type: "CPU", maker: "Apple", specs: "8-core CPU · 8–10-core GPU · unified memory · 2023" },
+        { name: "Apple M3 Pro", type: "CPU", maker: "Apple", specs: "11–12-core CPU · 14–18-core GPU · unified memory · 2023" },
+        { name: "Apple M3 Max", type: "CPU", maker: "Apple", specs: "14–16-core CPU · 30–40-core GPU · unified memory · 2023" },
+        { name: "Apple M4", type: "CPU", maker: "Apple", specs: "Up to 10-core CPU · up to 10-core GPU · unified memory · 2024" },
+        { name: "Apple M4 Pro", type: "CPU", maker: "Apple", specs: "12–14-core CPU · up to 20-core GPU · unified memory · 2024" },
+        { name: "Apple M4 Max", type: "CPU", maker: "Apple", specs: "14–16-core CPU · up to 40-core GPU · unified memory · 2024" },
+
+        { name: "Qualcomm Snapdragon X Plus X1P-64-100", type: "CPU", maker: "Qualcomm", specs: "10 cores · Hexagon NPU · Arm · 2024" },
+        { name: "Qualcomm Snapdragon X Elite X1E-84-100", type: "CPU", maker: "Qualcomm", specs: "12 cores · Hexagon NPU · Arm · 2024" },
+
+        { name: "MediaTek Kompanio 1380", type: "CPU", maker: "MediaTek", specs: "Octa-core Arm · ARM G57 MC5 GPU · Chromebook/education · 2022" },
+
+        { name: "NVIDIA GeForce RTX 4050 Laptop", type: "GPU", maker: "NVIDIA", specs: "2560 CUDA cores · Ada Lovelace · laptop TGP varies · 2023" },
+        { name: "NVIDIA GeForce RTX 4060 Laptop", type: "GPU", maker: "NVIDIA", specs: "3072 CUDA cores · Ada Lovelace · laptop TGP varies · 2023" },
+        { name: "NVIDIA GeForce RTX 4070 Laptop", type: "GPU", maker: "NVIDIA", specs: "4608 CUDA cores · Ada Lovelace · laptop TGP varies · 2023" },
+        { name: "NVIDIA GeForce RTX 4080 Laptop", type: "GPU", maker: "NVIDIA", specs: "7424 CUDA cores · Ada Lovelace · laptop TGP varies · 2023" },
+        { name: "NVIDIA GeForce RTX 4090 Laptop", type: "GPU", maker: "NVIDIA", specs: "9728 CUDA cores · Ada Lovelace · laptop TGP varies · 2023" },
+
+        { name: "AMD Radeon 660M", type: "GPU", maker: "AMD", specs: "6 compute units · RDNA 2 · integrated graphics · 2022" },
         { name: "AMD Radeon 780M", type: "GPU", maker: "AMD", specs: "12 compute units · RDNA 3 · integrated graphics · 2023" },
-        { name: "Intel Arc 140V", type: "GPU", maker: "Intel", specs: "8 Xe cores · integrated graphics · 2024" }
+        { name: "AMD Radeon 890M", type: "GPU", maker: "AMD", specs: "16 compute units · RDNA 3.5 · integrated graphics · 2024" },
+        { name: "AMD Radeon RX 7600S", type: "GPU", maker: "AMD", specs: "28 compute units · RDNA 3 · discrete laptop GPU · 2023" },
+        { name: "AMD Radeon RX 7700S", type: "GPU", maker: "AMD", specs: "32 compute units · RDNA 3 · discrete laptop GPU · 2023" },
+
+        { name: "Intel Iris Xe 96EU", type: "GPU", maker: "Intel", specs: "96 execution units · Tiger Lake architecture · integrated · 2021" },
+        { name: "Intel Arc A730M", type: "GPU", maker: "Intel", specs: "24 Xe cores · discrete laptop GPU · 2022" },
+        { name: "Intel Arc A770M", type: "GPU", maker: "Intel", specs: "32 Xe cores · discrete laptop GPU · 2022" },
+        { name: "Intel Arc 140V", type: "GPU", maker: "Intel", specs: "8 Xe cores · Lunar Lake integrated graphics · 2024" },
+
+        { name: "Qualcomm Adreno X1-85", type: "GPU", maker: "Qualcomm", specs: "Integrated Snapdragon X Elite GPU · 2024" }
       ];
       const suffixes = [
         ["AMD", "U", "Usually an efficiency-oriented Ryzen laptop processor class. Exact power limits depend on the chip and laptop."],
@@ -65,6 +109,7 @@
         ["AMD", "H", "Higher-performance mobile processor class, typically found in performance laptops."],
         ["AMD", "HX", "Enthusiast/high-performance mobile class. Check the exact SKU and laptop power configuration."],
         ["AMD", "PRO", "Business-oriented features such as security and manageability; not a power class."],
+        ["AMD", "AI", "Ryzen AI branding for processors with an NPU in applicable generations."],
         ["Intel", "U", "Generally an efficiency-oriented laptop processor class. Power varies by generation and device."],
         ["Intel", "P", "Performance-oriented thin-laptop class used in selected Intel generations."],
         ["Intel", "H", "Higher-performance laptop processor class, common in performance and creator laptops."],
@@ -72,8 +117,13 @@
         ["Intel", "V", "Series marker in selected Core Ultra model numbers, such as Lunar Lake; not a universal suffix definition."],
         ["NVIDIA", "Max-Q", "Efficiency-focused laptop design branding and technologies; not a separate GPU model or fixed wattage."],
         ["NVIDIA", "Ti", "Usually marks a higher-performance variant within a GPU family; the difference varies by generation."],
+        ["NVIDIA", "SUPER", "Refresh or higher-tier variant in selected GPU generations."],
         ["Apple", "Pro / Max / Ultra", "Apple silicon product tiers. Capabilities and configurations vary by chip generation."],
-        ["Qualcomm", "X Elite / X Plus", "Snapdragon X laptop processor tiers. Compare the full SKU for core count and features."]
+        ["Qualcomm", "X Elite / X Plus", "Snapdragon X laptop processor tiers. Compare the full SKU for core count and features."],
+        ["AMD", "XT", "May mark a higher-performance or refreshed Radeon/desktop variant; meaning varies by product family."],
+        ["Intel", "F", "Usually means no enabled integrated graphics and requires a discrete GPU in applicable processor families."],
+        ["Intel", "K", "Unlocked processor designation, primarily for desktop models or enthusiast platforms."],
+        ["Intel", "X / XE", "High-end or extreme desktop/workstation branding in some Intel families; not a standard laptop class."]
       ];
       const search = document.querySelector("#search");
       const type = document.querySelector("#type");
